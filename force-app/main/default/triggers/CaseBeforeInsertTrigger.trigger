@@ -1,5 +1,7 @@
 trigger CaseBeforeInsertTrigger on Case (before insert) {
-    // WE GET THE CASE FIRST 
+   /*
+   
+   // WE GET THE CASE FIRST 
     Case r = Trigger.new[0];
     
     // Testing if the content of case is null or not to avoid NPE ;) 
@@ -31,4 +33,5 @@ trigger CaseBeforeInsertTrigger on Case (before insert) {
         r.addError('You cannot create a request without attaching an account');
     }
 
+    */
 }

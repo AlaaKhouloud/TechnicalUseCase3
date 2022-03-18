@@ -1,17 +1,19 @@
 @isTest
 public class EventBookingTest {  
 
+        @TestSetup
+        static void makeData(){
+            List<Account> accounts = TestDataFactory.createaccounts(40);
+        }
+
         @isTest
         public static void refuseCaseCreationWhenAnAccountIsNotAttachedToACase(){
-            // Given
-    
-            Case request = new Case(Origin = 'Phone',Subject = 'Event Booking', Description = 'Book Spots');
-            
+            List<Case> cases = TestDataFactory.createcases(40);
             // When 
 
             Test.startTest();
 
-            Database.SaveResult result = Database.insert(request, false);
+            Database.SaveResult result = Database.insert(cases, false);
 
             Test.stopTest();
 
@@ -25,18 +27,15 @@ public class EventBookingTest {
         
         @isTest
         public static void refuseCaseCreationWhenNoContactIsAttachedToAnAccount(){
-            // Given
-      
-            Account a1 = new Account(Name = 'Salesforce');
-            insert a1;
+            List<Account> accounts = [SELECT id FROM Account];
 
-            Case request = new Case(Origin = 'Phone',Subject = 'Event Booking', Description = 'Book Spots', AccountId = a1.ID);
+            List<Case> cases = TestDataFactory.createcaseswithaccounts(accounts , 'Phone');
             
             // When 
 
             Test.startTest();
 
-            Database.SaveResult result = Database.insert(request, false);
+            Database.SaveResult result = Database.insert(cases, false);
 
             Test.stopTest();
 
@@ -50,27 +49,20 @@ public class EventBookingTest {
         
         @isTest
         public static void bookEventFromPhone(){
-            // Given
+            List<Account> accounts = [SELECT id FROM Account];
+
+            List<Contact> contacts = TestDataFactory.createcontacts(accounts);
+
+            List<Case> cases = TestDataFactory.createcases(accounts);
             
-            Account a1 = new Account(Name = 'Salesforce');
-            insert a1;
-            
-            Contact c1 = new Contact(LastName = 'Contact 1', AccountId = a1.ID);
-            insert c1;
-    
-            Contact c2 = new Contact(LastName = 'Contact 2', AccountId = a1.ID);
-            insert c2;
-    
-            Contact c3 = new Contact(LastName = 'Contact 3', AccountId = a1.ID);
-            insert c3;
-    
-            Case request = new Case(Origin = 'Phone',Subject = 'Event Booking', Description = 'Book Spots for Company A1 & their 3 employees', AccountId = a1.ID);
-            
+        
             // When 
 
             Test.startTest();
 
-            Database.SaveResult result = Database.insert(request, false);
+            Database.SaveResult result = Database.insert(contacts, false);
+            Database.SaveResult result = Database.insert(cases, false);
+
             Test.stopTest();
 
             // Then
@@ -78,35 +70,21 @@ public class EventBookingTest {
             System.assert(result.isSuccess());
 
 
-        }
-
-
         @isTest
         public static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanThreeForPhoneCases(){
             // Given
+            List<Account> accounts = [SELECT id FROM Account];
             
-            Account a1 = new Account(Name = 'Salesforce');
-            insert a1;
+            List<Contact> cts = TestDataFactory.createcontactsforaccount(accounts[0],5);
             
-            Contact c1 = new Contact(LastName = 'Contact 1', AccountId = a1.ID);
-            insert c1;
-    
-            Contact c2 = new Contact(LastName = 'Contact 2', AccountId = a1.ID);
-            insert c2;
-    
-            Contact c3 = new Contact(LastName = 'Contact 3', AccountId = a1.ID);
-            insert c3;
+            List<Case> cases = TestDataFactory.createcaseswithaccounts(accounts,'Phone');
 
-            Contact c4 = new Contact(LastName = 'Contact 4', AccountId = a1.ID);
-            insert c4;
-    
-            Case request = new Case(Origin = 'Phone',Subject = 'Event Booking', Description = 'Book Spots for Company A1 & their 4 employees', AccountId = a1.ID);
-            
             // When 
 
             Test.startTest();
 
-            Database.SaveResult result = Database.insert(request, false);
+            Database.SaveResult result = Database.insert(cts, false);
+            Database.SaveResult result = Database.insert(cases, false);
 
             Test.stopTest();
 
@@ -120,22 +98,16 @@ public class EventBookingTest {
         
         @isTest
         public static void bookEventFromTheWeb(){
-            // Given
+            List<Account> accounts = [SELECT id FROM Account];
             
-            Account a1 = new Account(Name = 'Salesforce');
-            insert a1;
-                
-                   
-            Contact c1 = new Contact(LastName = 'Contact 1', AccountId = a1.ID);
-            insert c1;
-    
-            Case request = new Case(Origin = 'Web',Subject = 'Event Booking', Description = 'Book One Spot for Company A1', AccountId = a1.ID);
+            List<Contact> cts = TestDataFactory.createcontactsforaccount(accounts[0],1);
             
+            List<Case> cases = TestDataFactory.createcaseswithaccounts(accounts,'Web');
             // When 
 
             Test.startTest();
-
-            Database.SaveResult result = Database.insert(request, false);
+            Database.SaveResult result = Database.insert(cts, false);
+            Database.SaveResult result = Database.insert(cases, false);
 
             Test.stopTest();
 
@@ -148,26 +120,17 @@ public class EventBookingTest {
             
         @isTest
         public static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanOneForWebCases(){
-            // Given
+            List<Account> accounts = [SELECT id FROM Account];
             
-            Account a1 = new Account(Name = 'Salesforce');
-            insert a1;
+            List<Contact> cts = TestDataFactory.createcontactsforaccount(accounts[0],5);
             
-            Contact c1 = new Contact(LastName = 'Contact 1', AccountId = a1.ID);
-            insert c1;
-    
-            Contact c2 = new Contact(LastName = 'Contact 2', AccountId = a1.ID);
-            insert c2;
-    
-            Contact c3 = new Contact(LastName = 'Contact 3', AccountId = a1.ID);
-            insert c3;
-    
-            Case request = new Case(Origin = 'Web',Subject = 'Event Booking', Description = 'Book Spots for Company A1 & their 3 employees', AccountId = a1.ID);
-            
+            List<Case> cases = TestDataFactory.createcaseswithaccounts(accounts,'Web');
+
             // When 
 
             Test.startTest();
 
+            Database.SaveResult result = Database.insert(cts, false);
             Database.SaveResult result = Database.insert(request, false);
 
             Test.stopTest();

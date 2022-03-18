@@ -1,5 +1,5 @@
 trigger CaseBeforeUpdateTrigger on Case (before update, after update) {
-
+/*
     Boolean requestSentToExternalSystem = false;
     Integer i=0;
     
@@ -10,4 +10,5 @@ trigger CaseBeforeUpdateTrigger on Case (before update, after update) {
         ExternalSystemService service = new ExternalSystemService();
         service.registerAttendees(r);
     }
+    */
 }
